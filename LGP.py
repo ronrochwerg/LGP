@@ -1,8 +1,10 @@
 from parameters import Parameters
 from instruction import create_program
 from mutation import apply_mutation
+from recombination import apply_recombination
 from evaluate import evaluate
 from copy import copy
+
 
 '''
 Left to do: 
@@ -15,7 +17,7 @@ DO MAP ELITES
 # one linear genetic program
 class LGP(object):
 
-    # initialization of a single LGP individual
+    # initialization of a single LGP individual, features is the number of features in the data
     def __init__(self, features):
         self.param = Parameters(features)
         self.instructions = []
@@ -29,15 +31,22 @@ class LGP(object):
 
     # sets fitness to the balanced accuracy, behavior to the error vector and predictions to the predictions on the
     # given data
-    def evaluate(self, input_data, output_data):
-        evaluation = evaluate(self.param, self.instructions, input_data, output_data)
+    def evaluate(self, input_data, target_data):
+        evaluation = evaluate(self.param, self.instructions, input_data, target_data)
         self.fitness = evaluation[0]
         self.behavior = evaluation[1]
         self.predictions = evaluation[2]
 
-    # applies a mutation to the individual
+    # applies a mutation to the individual (directly to the individual)
     def mutate(self):
         self.instructions = apply_mutation(self.param,self.instructions)
+
+    # applies recombination to the individual and another individual (directly, should already be copies)
+    def recombine(self, other):
+        child1, child2 = apply_recombination(self.param, self.instructions, other.instructions)
+        self.set_instructions(child1)
+        other.set_instructions(child2)
+
 
     # function for setting the instructions of an individual (used for creating copies)
     def set_instructions(self, instructions):

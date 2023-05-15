@@ -38,5 +38,10 @@ class Parameters:
         self.mac_mut_rate = 0.5
         self.mic_mut_rate = 0.5
 
+        self.recombination_type = "one_point_crossover"
+
+        #maximum distance between crossover points
+        self.max_dc = 10
+
         # rate of constant being used in instruction
         self.constant_rate = 0.5
