@@ -60,7 +60,7 @@ def macro_mut(param, instructions, threshold = (0.33,0.66,1)):
         place = randint(0, len(instructions) - 1)
         del instructions[place]
     else: # replacement
-        new_instr = create_instruction()
+        new_instr = create_instruction(param)
         place = randint(0, len(instructions) - 1)
         instructions[place] = new_instr
 

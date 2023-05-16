@@ -20,16 +20,18 @@ def balanced_accuracy(predictions, target_data):
             FP += 1
         elif target_data[i] == 1:  # when prediction is -1
             FN += 1
-    balanced_acc = 0.5 * (TP / (TP + FN)) + 0.5 * (TN / (TN + FP))
-
-    return balanced_acc
+    try:
+        balanced_acc = 0.5 * (TP / (TP + FN)) + 0.5 * (TN / (TN + FP))
+        return balanced_acc
+    except:
+        print("Unable to calculate balanced accuracy, please check data. Setting accuracy to 0")
+        return 0
 
 # For evaluating the set of instructions on a set of data, can return the balanced accuracy, raw predictions, or error vector.
 def evaluate(param, instructions, input_data, target_data):
     # getting the effective instructions
     reduced_instr = intron_removal(param, instructions)
     predictions = []
-
     # going through each sample in the data and getting the prediction
     if len(reduced_instr) > 0:
         for sample in input_data:

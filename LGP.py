@@ -4,6 +4,7 @@ from mutation import apply_mutation
 from recombination import apply_recombination
 from evaluate import evaluate
 from copy import copy
+from random import seed
 
 
 '''
@@ -31,6 +32,7 @@ class LGP(object):
 
     # sets fitness to the balanced accuracy, behavior to the error vector and predictions to the predictions on the
     # given data
+    # input data should be a list of lists, target data should be a list of values (targets)
     def evaluate(self, input_data, target_data):
         evaluation = evaluate(self.param, self.instructions, input_data, target_data)
         self.fitness = evaluation[0]
@@ -59,12 +61,43 @@ class LGP(object):
         LGP_copy.set_instructions(copy_instr)
         return LGP_copy
 
+    def mutate_child(self, input_data, target_data):
+        child = self.make_copy()
+        child.mutate()
+        child.evaluate(input_data, target_data)
+        return child
+
+    def recombine_child(self, other, input_data, target_data):
+        child1 = self.make_copy()
+        child2 = other.make_copy()
+        child1.recombine(child2)
+        child1.evaluate(input_data, target_data)
+        child2.evaluate(input_data, target_data)
+        return child1, child2
+
 # add set instruction function for make copy
 
 
 if __name__ == '__main__':
+
     testy = LGP(5)
     testy.initialize()
+
+    testy2 = LGP(5)
+    testy2.initialize()
+
     print(testy.instructions)
-    testy.mutate()
-    print(testy.instructions)
+    print(testy2.instructions)
+
+    child1, child2 = testy.recombine_child(testy2, [[1,2,3,4,5]], [1])
+
+    print(child1.instructions)
+    print(child2.instructions)
+
+    print(testy == testy)
+    print(testy == testy2)
+    print(testy == testy.make_copy())
+
+    listy = []
+
+    print(listy.count(testy) == len(listy))
