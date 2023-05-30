@@ -1,5 +1,6 @@
 from operations import apply_operation
 from instruction import intron_removal
+import numpy as np
 
 # calculating the balanced accuracy given a set of predictions and true values
 def balanced_accuracy(predictions, target_data):
@@ -48,7 +49,7 @@ def evaluate(param, instructions, input_data, target_data):
         predictions = [-1] * len(target_data)
 
     error_vect = [1 if predictions[i] == target_data[i] else 0 for i in range(len(predictions))]
-    return [balanced_accuracy(predictions, target_data), repr(error_vect), predictions]
+    return [balanced_accuracy(predictions, target_data), np.array(error_vect), predictions]
 
 # run a single sample through a set of LGP instructions
 def eval_sample(param, instructions, sample):
