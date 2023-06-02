@@ -1,17 +1,16 @@
-from parameters import Parameters
-from instruction import create_program
-from mutation import apply_mutation
-from recombination import apply_recombination
-from evaluate import evaluate
+from .parameters import Parameters
+from .instruction import create_program
+from .mutation import apply_mutation
+from .recombination import apply_recombination
+from .evaluate import evaluate
 from copy import copy
-from random import seed
+import numpy as np
 
 
 '''
 Left to do: 
 create print function for the program (create some extra parameters in param file for printing)
 Add comments on other files
-DO MAP ELITES
 
 '''
 
@@ -19,8 +18,8 @@ DO MAP ELITES
 class LGP(object):
 
     # initialization of a single LGP individual, features is the number of features in the data
-    def __init__(self, features):
-        self.param = Parameters(features)
+    def __init__(self, features, rng):
+        self.param = Parameters(features, rng)
         self.instructions = []
         self.fitness = -1
         self.behavior = ""
@@ -57,7 +56,7 @@ class LGP(object):
     # function for making a copy of an individual (blank individual with the same instructions)
     def make_copy(self):
         copy_instr = [copy(i) for i in self.instructions]
-        LGP_copy = LGP(self.param.num_features)
+        LGP_copy = LGP(self.param.num_features, self.param.rng)
         LGP_copy.set_instructions(copy_instr)
         return LGP_copy
 
@@ -89,7 +88,7 @@ if __name__ == '__main__':
     print(testy.instructions)
     print(testy2.instructions)
 
-    child1, child2 = testy.recombine_child(testy2, [[1,2,3,4,5]], [1])
+    child1, child2 = testy.recombine_child(testy2, np.array([[1,2,3,4,5]]), np.array([1]))
 
     print(child1.instructions)
     print(child2.instructions)

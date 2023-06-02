@@ -1,22 +1,22 @@
-from random import choice, random, shuffle
+#from random import choice, random, shuffle
 
 # creating an instruction
 def create_instruction(param):
     # choosing destination register
-    dest = choice(param.registers)
+    dest = param.rng.choice(param.registers)
 
     # choosing if instruction will have a constant or not
-    if random() < param.constant_rate:
-        const = choice(param.constants)
-        other = choice(param.all_readable)
+    if param.rng.random() < param.constant_rate:
+        const = param.rng.choice(param.constants)
+        other = param.rng.choice(param.all_readable)
         out = [const, other]
-        shuffle(out)
+        param.rng.shuffle(out)
         src1 = out[0]
         src2 = out[1]
     else:
-        src1 = choice(param.all_readable)
-        src2 = choice(param.all_readable)
-    op = choice(param.operators)
+        src1 = param.rng.choice(param.all_readable)
+        src2 = param.rng.choice(param.all_readable)
+    op = param.rng.choice(param.operators)
     return [dest, src1, src2, op]
 
 # creating a program with the initial program length

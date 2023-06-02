@@ -1,8 +1,9 @@
-from register import register
+from .register import register
+from numpy.random import default_rng
 
 class Parameters:
 
-    def __init__(self, features):
+    def __init__(self, features, rng):
         # list of operators and how many operators are being used
         self.operators_symbols = ['+','-','*','/','>']
         self.num_operators = len(self.operators_symbols)
@@ -45,3 +46,6 @@ class Parameters:
 
         # rate of constant being used in instruction
         self.constant_rate = 0.5
+
+
+        self.rng = rng
