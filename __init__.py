@@ -1,2 +1,3 @@
 from .LGP import LGP
-from .parent_selection import *
+from .reproduction import *
+from .parameters import Parameters

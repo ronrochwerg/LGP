@@ -21,8 +21,6 @@ class Parameters:
 
         # number of calculation registers
         self.num_registers = 10
-        #creating the register objects
-        self.register_obj = [register(i) for i in range(self.num_registers)]
 
         # number of features (only readable)
         self.num_features = features
@@ -47,5 +45,5 @@ class Parameters:
         # rate of constant being used in instruction
         self.constant_rate = 0.5
 
-
+        # random number generator
         self.rng = rng

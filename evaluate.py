@@ -15,14 +15,14 @@ def balanced_accuracy(target_data, predictions):
 
 
 # For evaluating the set of instructions on a set of data, can return the balanced accuracy, raw predictions, or error vector.
-def evaluate(param, instructions, input_data, target_data):
+def evaluate(param, registers, instructions, input_data, target_data):
     # getting the effective instructions
     reduced_instr = intron_removal(param, instructions)
     predictions = []
     # going through each sample in the data and getting the prediction
     if len(reduced_instr) > 0:
         for sample in input_data:
-            pred_val = np.tanh(eval_sample(param, reduced_instr, sample))
+            pred_val = np.tanh(eval_sample(param, registers, reduced_instr, sample))
             # for binary problems (0 return counts as undecided and is wrong no matter what)
             predictions.append(pred_val)
             # if pred_val > 0:
@@ -39,10 +39,10 @@ def evaluate(param, instructions, input_data, target_data):
     return [balanced_accuracy(target_data, predictions), np.array(error_vect), predictions]
 
 # run a single sample through a set of LGP instructions
-def eval_sample(param, instructions, sample):
+def eval_sample(param, registers, instructions, sample):
     instr = 0
     while 0 <= instr < len(instructions):
-        instr += apply_operation(param, instructions[instr], sample)
+        instr += apply_operation(param, registers, instructions[instr], sample)
 
-    return param.register_obj[0].value
+    return registers[0].value
 

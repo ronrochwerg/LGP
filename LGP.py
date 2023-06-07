@@ -3,6 +3,7 @@ from .instruction import create_program
 from .mutation import apply_mutation
 from .recombination import apply_recombination
 from .evaluate import evaluate
+from .register import register
 from copy import copy
 import numpy as np
 
@@ -18,12 +19,13 @@ Add comments on other files
 class LGP(object):
 
     # initialization of a single LGP individual, features is the number of features in the data
-    def __init__(self, features, rng):
-        self.param = Parameters(features, rng)
+    def __init__(self, param):
+        self.param = param
         self.instructions = []
         self.fitness = -1
         self.behavior = ""
         self.predictions = []
+        self.register_obj = [register(i) for i in range(self.param.num_registers)]
 
     # initialize an individual creating a random set of instructions using the initialization length
     def initialize(self):
@@ -33,7 +35,7 @@ class LGP(object):
     # given data
     # input data should be a list of lists, target data should be a list of values (targets)
     def evaluate(self, input_data, target_data):
-        evaluation = evaluate(self.param, self.instructions, input_data, target_data)
+        evaluation = evaluate(self.param, self.register_obj, self.instructions, input_data, target_data)
         self.fitness = evaluation[0]
         self.behavior = evaluation[1]
         self.predictions = evaluation[2]
@@ -48,7 +50,6 @@ class LGP(object):
         self.set_instructions(child1)
         other.set_instructions(child2)
 
-
     # function for setting the instructions of an individual (used for creating copies)
     def set_instructions(self, instructions):
         self.instructions = instructions
@@ -56,7 +57,7 @@ class LGP(object):
     # function for making a copy of an individual (blank individual with the same instructions)
     def make_copy(self):
         copy_instr = [copy(i) for i in self.instructions]
-        LGP_copy = LGP(self.param.num_features, self.param.rng)
+        LGP_copy = LGP(self.param)
         LGP_copy.set_instructions(copy_instr)
         return LGP_copy
 

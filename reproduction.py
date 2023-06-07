@@ -10,9 +10,9 @@ def tourney_selection(pop, num_parent, tourney_size, rng, replacement = True):
     # keep tourney until all parents have been selected
     while len(selected) < num_parent:
         #randomly select tourney individuals without replacement
-        tourney = rng.choice(pop, size = tourney_size, replacement=False)
+        tourney = sorted(rng.choice(len(pop), size = tourney_size, replacement=False),key=lambda x: pop[x].fitness, reverse=True)
         #find winner based on highest fitness
-        winner = sorted(tourney, key=lambda x: x.fitness, reverse=True)[0]
+        winner = sorted(tourney, key=lambda x: pop[x].fitness, reverse=True)[0]
         #if allowed replacement or the winner is not already selected add them to selection
         if replacement or winner not in selected:
             selected.append(winner)
