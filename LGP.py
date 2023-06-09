@@ -28,8 +28,9 @@ class LGP(object):
         self.register_obj = [register(i) for i in range(self.param.num_registers)]
 
     # initialize an individual creating a random set of instructions using the initialization length
-    def initialize(self):
+    def initialize(self, input_data, target_data):
         self.instructions = create_program(self.param)
+        self.evaluate(input_data, target_data)
 
     # sets fitness to the balanced accuracy, behavior to the error vector and predictions to the predictions on the
     # given data
@@ -79,25 +80,4 @@ class LGP(object):
 
 
 if __name__ == '__main__':
-
-    testy = LGP(5)
-    testy.initialize()
-
-    testy2 = LGP(5)
-    testy2.initialize()
-
-    print(testy.instructions)
-    print(testy2.instructions)
-
-    child1, child2 = testy.recombine_child(testy2, np.array([[1,2,3,4,5]]), np.array([1]))
-
-    print(child1.instructions)
-    print(child2.instructions)
-
-    print(testy == testy)
-    print(testy == testy2)
-    print(testy == testy.make_copy())
-
-    listy = []
-
-    print(listy.count(testy) == len(listy))
+    pass

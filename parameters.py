@@ -3,7 +3,7 @@ from numpy.random import default_rng
 
 class Parameters:
 
-    def __init__(self, features, rng):
+    def __init__(self, num_features, rng):
         # list of operators and how many operators are being used
         self.operators_symbols = ['+','-','*','/','>']
         self.num_operators = len(self.operators_symbols)
@@ -23,14 +23,14 @@ class Parameters:
         self.num_registers = 10
 
         # number of features (only readable)
-        self.num_features = features
+        self.num_features = num_features
 
         # number of all readable registers
         self.num_all = self.num_features + self.num_registers
 
         # creating lists for ease of random selection
         self.registers = list(range(self.num_registers))
-        self.features = list(range(self.num_registers, self.num_features, 1))
+        self.features = list(range(self.num_registers, self.num_all, 1))
         self.all_readable = list(range(self.num_all))
 
         # mutation rates

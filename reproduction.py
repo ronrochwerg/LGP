@@ -1,4 +1,4 @@
-from numpy.random import default_rng
+
 
 # random uniform selection
 def random_selection(pop, num_parent, rng, replacement = True):

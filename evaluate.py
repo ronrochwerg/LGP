@@ -41,6 +41,10 @@ def evaluate(param, registers, instructions, input_data, target_data):
 # run a single sample through a set of LGP instructions
 def eval_sample(param, registers, instructions, sample):
     instr = 0
+    # resetting the values in the calculation registers
+    for register in registers:
+        register.value = 1
+
     while 0 <= instr < len(instructions):
         instr += apply_operation(param, registers, instructions[instr], sample)
 
