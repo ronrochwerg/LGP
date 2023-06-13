@@ -9,7 +9,7 @@ def random_selection(pop, num_parent, rng, replacement = True):
 def tourney_selection(pop, tourney_size, rng, replacement = False):
 
     #randomly select tourney individuals without replacement (for both tourneys)
-    selected = rng.choice(len(pop), size = 2*tourney_size, replacement=replacement)
+    selected = rng.choice(len(pop), size = 2*tourney_size, replace=replacement)
 
     # split the individuals selected into two tourneys and sort them based on fitness
     tourney1 = sorted(selected[:tourney_size], key=lambda x: pop[x].fitness, reverse=True)
