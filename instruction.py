@@ -34,14 +34,15 @@ def intron_removal(param, instructions):
     # going through instructions in reverse order
     for instr in instructions[::-1]:
         # checking if the instruction is a comparison and if the previous instruction was efficient
-        if instr[-1] == 4 and prev_eff:
-            eff_list.append(instr)
-            # Making registers true if they were used in the instruction (only for calc registers)
-            if 0 < instr[1] < param.num_registers:
-                eff_reg[instr[1]] = True
-            if 0 < instr[2] < param.num_registers:
-                eff_reg[instr[2]] = True
-            prev_eff = True
+        if instr[-1] == 4:
+            if prev_eff:
+                eff_list.append(instr)
+                # Making registers true if they were used in the instruction (only for calc registers)
+                if 0 < instr[1] < param.num_registers:
+                    eff_reg[instr[1]] = True
+                if 0 < instr[2] < param.num_registers:
+                    eff_reg[instr[2]] = True
+                prev_eff = True
         elif eff_reg[instr[0]]:
             eff_list.append(instr)
             eff_reg[instr[0]] = False
@@ -54,5 +55,31 @@ def intron_removal(param, instructions):
             prev_eff = False
 
     return eff_list[::-1]
+
+def get_printable_value(param, src):
+    if src < 0:
+        return repr(src * -1)
+    elif src < param.num_registers:
+        return 'R' + repr(src)
+    else:
+        return 'INP' + repr(src - param.num_registers)
+
+def print_instructions(param, instructions, lineage, effective = False):
+
+    if effective:
+        instructions = intron_removal(param, instructions)
+
+    print('Printing {effective} instructions for individual {lineage}'.format(effective= 'effective' if effective else 'all', lineage = lineage))
+    for instruction in instructions:
+        dest = 'R' + repr(instruction[0])
+        src1 = get_printable_value(param, instruction[1])
+        src2 = get_printable_value(param, instruction[2])
+        op = instruction[3]
+        if op == 4:
+            print(src1, param.operators_symbols[op], src2 + ':')
+        else:
+            print(dest, '=', src1, param.operators_symbols[op], src2)
+
+    print()
 
 

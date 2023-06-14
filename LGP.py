@@ -1,5 +1,5 @@
 from .parameters import Parameters
-from .instruction import create_program
+from .instruction import create_program, print_instructions
 from .mutation import apply_mutation
 from .recombination import apply_recombination
 from .evaluate import evaluate
@@ -27,10 +27,14 @@ class LGP(object):
         self.predictions = []
         self.register_obj = [register(i) for i in range(self.param.num_registers)]
 
+        self.num_children = 0
+        self.lineage = '0'
+
     # initialize an individual creating a random set of instructions using the initialization length
-    def initialize(self, input_data, target_data):
+    def initialize(self, input_data, target_data, name = '0'):
         self.instructions = create_program(self.param)
         self.evaluate(input_data, target_data)
+        self.lineage = repr(name)
 
     # sets fitness to the balanced accuracy, behavior to the error vector and predictions to the predictions on the
     # given data
@@ -57,9 +61,11 @@ class LGP(object):
 
     # function for making a copy of an individual (blank individual with the same instructions)
     def make_copy(self):
+        self.num_children += 1
         copy_instr = [copy(i) for i in self.instructions]
         LGP_copy = LGP(self.param)
         LGP_copy.set_instructions(copy_instr)
+        LGP_copy.lineage = self.lineage + ',' + repr(self.num_children)
         return LGP_copy
 
     def mutate_child(self, input_data, target_data):
@@ -75,6 +81,9 @@ class LGP(object):
         child1.evaluate(input_data, target_data)
         child2.evaluate(input_data, target_data)
         return child1, child2
+
+    def print_program(self, effective = False):
+        print_instructions(self.param, self.instructions, self.lineage, effective=effective)
 
 # add set instruction function for make copy
 
