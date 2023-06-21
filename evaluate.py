@@ -38,6 +38,28 @@ def evaluate(param, registers, instructions, input_data, target_data):
     error_vect = target_data - predictions
     return [balanced_accuracy(target_data, predictions), np.array(error_vect), predictions]
 
+def predict(param, registers, instructions, input_data):
+    # getting the effective instructions
+    reduced_instr = intron_removal(param, instructions)
+    predictions = []
+    # going through each sample in the data and getting the prediction
+    if len(reduced_instr) > 0:
+        for sample in input_data:
+            pred_val = np.tanh(eval_sample(param, registers, reduced_instr, sample))
+            # for binary problems (0 return counts as undecided and is wrong no matter what)
+            predictions.append(pred_val)
+            # if pred_val > 0:
+            #     predictions.append(1)
+            # elif pred_val < 0:
+            #     predictions.append(-1)
+            # else:
+            #     predictions.append(0)
+    # if the program has no effective instructions then it gets all samples incorrect
+    else:
+        predictions = [0] * len(input_data)
+
+    return predictions
+
 # run a single sample through a set of LGP instructions
 def eval_sample(param, registers, instructions, sample):
     instr = 0

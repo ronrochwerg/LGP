@@ -2,7 +2,7 @@ from .parameters import Parameters
 from .instruction import create_program, print_instructions
 from .mutation import apply_mutation
 from .recombination import apply_recombination
-from .evaluate import evaluate
+from .evaluate import evaluate, predict
 from .register import register
 from copy import copy
 import numpy as np
@@ -44,6 +44,9 @@ class LGP(object):
         self.fitness = evaluation[0]
         self.behavior = evaluation[1]
         self.predictions = evaluation[2]
+
+    def predict(self, input_data):
+        return predict(self.param, self.register_obj, self.instructions, input_data)
 
     # applies a mutation to the individual (directly to the individual)
     def mutate(self):

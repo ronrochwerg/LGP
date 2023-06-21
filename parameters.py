@@ -20,7 +20,7 @@ class Parameters:
         self.constants = list(range(-1,-10, -1))
 
         # number of calculation registers
-        self.num_registers = 10
+        self.num_registers = 4
 
         # number of features (only readable)
         self.num_features = num_features
