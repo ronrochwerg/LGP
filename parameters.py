@@ -5,7 +5,7 @@ class Parameters:
 
     def __init__(self, num_features, rng):
         # list of operators and how many operators are being used
-        self.operators_symbols = ['+','-','*','/','>']
+        self.operators_symbols = ['+','-','*','/','>','sin', 'cos']
         self.num_operators = len(self.operators_symbols)
         self.operators = list(range(self.num_operators))
 

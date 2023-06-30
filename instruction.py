@@ -77,6 +77,8 @@ def print_instructions(param, instructions, lineage, effective = False):
         op = instruction[3]
         if op == 4:
             print(src1, param.operators_symbols[op], src2 + ':')
+        elif op == 5 or op == 6:
+            print(dest, '=', param.operators_symbols[op] + '(' + src1 + ')')
         else:
             print(dest, '=', src1, param.operators_symbols[op], src2)
 

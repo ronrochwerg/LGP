@@ -1,4 +1,4 @@
-from numpy import sqrt
+from numpy import sqrt, sin, cos
 # get the value of the operand in the instruction
 def value(param, registers, operand, sample):
     # if it is a constant, make it non-negative and return
@@ -40,10 +40,16 @@ def apply_operation(param, registers, instruction, sample):
             return 2
         else:
             return 1
+    elif op == 5:
+        registers[dest].value = sin(src1)
+        return 1
+    elif op == 6:
+        registers[dest].value = cos(src1)
+        return 1
     #just in case
     else:
-        return -10**6
+        exit('error in applying operation, incorrect operation value')
 
 
 if __name__ == '__main__':
-    print(4/sqrt(0.0001 + 2**2))
+    print('operations')
