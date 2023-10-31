@@ -32,8 +32,11 @@ def apply_operation(param, registers, instruction, sample):
         return 1
     #protected division
     elif op == 3:
-        registers[dest].value = src1/sqrt(0.0001 + src2**2)
-        return 1
+        if src2 == 0:
+            return 1
+        else:
+            registers[dest].value = src1/src2
+            return 1
     #branch
     elif op == 4:
         if src1 > src2:

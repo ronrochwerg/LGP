@@ -15,14 +15,18 @@ def balanced_accuracy(target_data, predictions):
 
 
 # For evaluating the set of instructions on a set of data, can return the balanced accuracy, raw predictions, or error vector.
-def evaluate(param, registers, instructions, input_data, target_data):
+def evaluate(param, registers, instructions, input_data, target_data, effective = False):
     # getting the effective instructions
-    reduced_instr = intron_removal(param, instructions)
+    if effective:
+        reduced_instr, eff_reg = intron_removal(param, instructions, effective)
+    else:
+        reduced_instr = intron_removal(param, instructions, effective)
     predictions = []
     # going through each sample in the data and getting the prediction
     if len(reduced_instr) > 0:
         for sample in input_data:
             pred_val = np.tanh(eval_sample(param, registers, reduced_instr, sample))
+            # pred_val = eval_sample(param, registers, reduced_instr, sample)
             # for binary problems (0 return counts as undecided and is wrong no matter what)
             predictions.append(pred_val)
             # if pred_val > 0:
@@ -34,9 +38,11 @@ def evaluate(param, registers, instructions, input_data, target_data):
     # if the program has no effective instructions then it gets all samples incorrect
     else:
         predictions = [0] * len(target_data)
-
     error_vect = target_data - predictions
-    return [balanced_accuracy(target_data, predictions), np.array(error_vect), predictions]
+    if effective:
+        return [balanced_accuracy(target_data, predictions), np.array(error_vect), predictions, reduced_instr, eff_reg]
+    else:
+        return [balanced_accuracy(target_data, predictions), np.array(error_vect), predictions]
 
 def predict(param, registers, instructions, input_data):
     # getting the effective instructions
@@ -46,14 +52,8 @@ def predict(param, registers, instructions, input_data):
     if len(reduced_instr) > 0:
         for sample in input_data:
             pred_val = np.tanh(eval_sample(param, registers, reduced_instr, sample))
-            # for binary problems (0 return counts as undecided and is wrong no matter what)
             predictions.append(pred_val)
-            # if pred_val > 0:
-            #     predictions.append(1)
-            # elif pred_val < 0:
-            #     predictions.append(-1)
-            # else:
-            #     predictions.append(0)
+
     # if the program has no effective instructions then it gets all samples incorrect
     else:
         predictions = [0] * len(input_data)
@@ -64,8 +64,12 @@ def predict(param, registers, instructions, input_data):
 def eval_sample(param, registers, instructions, sample):
     instr = 0
     # resetting the values in the calculation registers
-    for register in registers:
-        register.value = 1
+    if param.input_sep: # if features are read only
+        for register in registers:
+            register.value = 1
+    else: # if features are same as calc registers
+        for i, register in enumerate(registers):
+            register.value = sample[i%len(sample)]
 
     while 0 <= instr < len(instructions):
         instr += apply_operation(param, registers, instructions[instr], sample)

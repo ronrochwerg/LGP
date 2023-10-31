@@ -22,6 +22,7 @@ class LGP(object):
     def __init__(self, param):
         self.param = param
         self.instructions = []
+        self.effective_registers = []
         self.fitness = -1
         self.behavior = ""
         self.predictions = []
@@ -32,15 +33,21 @@ class LGP(object):
 
     # initialize an individual creating a random set of instructions using the initialization length
     def initialize(self, input_data, target_data, name = '0'):
-        self.instructions = create_program(self.param)
+        if self.param.effective_initialization:
+            self.instructions, self.effective_registers = create_program(self.param, self.param.effective_initialization)
+        else:
+            self.instructions = create_program(self.param, self.param.effective_initialization)
         self.evaluate(input_data, target_data)
         self.lineage = repr(name)
 
     # sets fitness to the balanced accuracy, behavior to the error vector and predictions to the predictions on the
     # given data
-    # input data should be a list of lists, target data should be a list of values (targets)
-    def evaluate(self, input_data, target_data):
-        evaluation = evaluate(self.param, self.register_obj, self.instructions, input_data, target_data)
+    # input data should be a list of lists, target data should be a list of values (targets) (both should be np arrays)
+    def evaluate(self, input_data, target_data, effective=False):
+        evaluation = evaluate(self.param, self.register_obj, self.instructions, input_data, target_data, effective)
+        if effective:
+            self.instructions = evaluation[3]
+            self.effective_registers = evaluation[4]
         self.fitness = evaluation[0]
         self.behavior = evaluation[1]
         self.predictions = evaluation[2]
@@ -50,7 +57,7 @@ class LGP(object):
 
     # applies a mutation to the individual (directly to the individual)
     def mutate(self):
-        self.instructions = apply_mutation(self.param,self.instructions)
+        self.instructions = apply_mutation(self.param,self.instructions, self.effective_registers)
 
     # applies recombination to the individual and another individual (directly, should already be copies)
     def recombine(self, other):
@@ -74,15 +81,15 @@ class LGP(object):
     def mutate_child(self, input_data, target_data):
         child = self.make_copy()
         child.mutate()
-        child.evaluate(input_data, target_data)
+        child.evaluate(input_data, target_data, effective=self.param.effective_mutation)
         return child
 
     def recombine_child(self, other, input_data, target_data):
         child1 = self.make_copy()
         child2 = other.make_copy()
         child1.recombine(child2)
-        child1.evaluate(input_data, target_data)
-        child2.evaluate(input_data, target_data)
+        child1.evaluate(input_data, target_data, effective=self.param.effective_recombination)
+        child2.evaluate(input_data, target_data, effective=self.param.effective_recombination)
         return child1, child2
 
     def print_program(self, effective = False):
@@ -90,6 +97,3 @@ class LGP(object):
 
 # add set instruction function for make copy
 
-
-if __name__ == '__main__':
-    pass

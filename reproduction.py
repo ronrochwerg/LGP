@@ -20,3 +20,16 @@ def tourney_selection(pop, tourney_size, rng, replacement = False):
     losers = [tourney1[-1], tourney2[-1]]
 
     return winners, losers
+
+def lexicase(pop, samples, target, num_return = 1):
+    predictions = []
+    for i, individual in enumerate(pop):
+        prediction = individual.predict(samples)
+        predictions.append([target - prediction,i])
+
+    for i in range(len(samples)):
+        min_err = min(predictions, key=lambda x: abs(x[0][i]))[0][i]
+        predictions = [x for x in predictions if x[0][i] <= min_err]
+        if len(predictions) == num_return:
+            return pop[predictions[0][1]]
+    return pop[predictions[0][1]]
