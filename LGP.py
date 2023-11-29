@@ -52,8 +52,8 @@ class LGP(object):
         self.behavior = evaluation[1]
         self.predictions = evaluation[2]
 
-    def predict(self, input_data):
-        return predict(self.param, self.register_obj, self.instructions, input_data)
+    def predict(self, input_data, tanh=True):
+        return predict(self.param, self.register_obj, self.instructions, input_data, tanh)
 
     # applies a mutation to the individual (directly to the individual)
     def mutate(self):

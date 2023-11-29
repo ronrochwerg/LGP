@@ -9,7 +9,7 @@ def apply_mutation(param, instructions, eff_reg = False):
     # We never want to return instructions that have not mutated in some way
     while not change:
         if param.rng.random() < param.mac_mut_rate:
-            new_instr = macro_mut(param, new_instr, eff_reg)
+            new_instr = macro_mut(param, new_instr, eff_reg=eff_reg)
             change = True
         if param.rng.random() < param.mic_mut_rate:
             new_instr = micro_mut(param, new_instr)

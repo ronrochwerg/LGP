@@ -6,8 +6,8 @@ class Parameters:
     def __init__(self, num_features, rng, input_sep = True):
         # list of operators and how many operators are being used
         self.operators_symbols = ['+','-','*','/','>','sin', 'cos']
-        self.num_operators = len(self.operators_symbols)
-        self.operators = list(range(self.num_operators))
+        self.operators = [0,1,2,3,4,5,6]
+        self.num_operators = len(self.operators)
 
         # program initialization length ([min, max + 1])
         self.init_length = list(range(10,16))

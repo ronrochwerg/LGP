@@ -44,14 +44,17 @@ def evaluate(param, registers, instructions, input_data, target_data, effective 
     else:
         return [balanced_accuracy(target_data, predictions), np.array(error_vect), predictions]
 
-def predict(param, registers, instructions, input_data):
+def predict(param, registers, instructions, input_data, tanh = True):
     # getting the effective instructions
     reduced_instr = intron_removal(param, instructions)
     predictions = []
     # going through each sample in the data and getting the prediction
     if len(reduced_instr) > 0:
         for sample in input_data:
-            pred_val = np.tanh(eval_sample(param, registers, reduced_instr, sample))
+            if tanh:
+                pred_val = np.tanh(eval_sample(param, registers, reduced_instr, sample))
+            else:
+                pred_val = eval_sample(param, registers, reduced_instr, sample)
             predictions.append(pred_val)
 
     # if the program has no effective instructions then it gets all samples incorrect
