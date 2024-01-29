@@ -78,19 +78,21 @@ class LGP(object):
         LGP_copy.lineage = self.lineage + ',' + repr(self.num_children)
         return LGP_copy
 
-    def mutate_child(self, input_data, target_data):
-        child = self.make_copy()
-        child.mutate()
-        child.evaluate(input_data, target_data, effective=self.param.effective_mutation)
-        return child
-
-    def recombine_child(self, other, input_data, target_data):
-        child1 = self.make_copy()
-        child2 = other.make_copy()
-        child1.recombine(child2)
-        child1.evaluate(input_data, target_data, effective=self.param.effective_recombination)
-        child2.evaluate(input_data, target_data, effective=self.param.effective_recombination)
-        return child1, child2
+    # used for directly making children through mutation or recombination
+    # (same as making a copy and then mutating/recombining the copies)
+    # def mutate_child(self, input_data, target_data):
+    #     child = self.make_copy()
+    #     child.mutate()
+    #     child.evaluate(input_data, target_data, effective=self.param.effective_mutation)
+    #     return child
+    #
+    # def recombine_child(self, other, input_data, target_data):
+    #     child1 = self.make_copy()
+    #     child2 = other.make_copy()
+    #     child1.recombine(child2)
+    #     child1.evaluate(input_data, target_data, effective=self.param.effective_recombination)
+    #     child2.evaluate(input_data, target_data, effective=self.param.effective_recombination)
+    #     return child1, child2
 
     def print_program(self, effective = False):
         print_instructions(self.param, self.instructions, self.lineage, effective=effective)
