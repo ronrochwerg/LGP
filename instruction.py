@@ -34,6 +34,7 @@ def create_program(param, effective = False):
         instructions = []
         for i in range(length):
             instruction = create_instruction(param, eff_reg)
+            print(eff_reg, instruction)
             eff_reg.remove(instruction[0])
             if 0 <= instruction[1] < param.num_registers:
                 eff_reg.add(instruction[1])
@@ -43,7 +44,7 @@ def create_program(param, effective = False):
             effective_reg.insert(0, list(eff_reg))
         return instructions, effective_reg
     else:
-        return [create_instruction(param) for i in range(length)]
+        return [create_instruction(param) for _ in range(length)]
 
 # to remove introns from a set of instructions
 def intron_removal(param, instructions, effective = False):
@@ -94,23 +95,23 @@ def get_printable_value(param, src):
     else:
         return 'INP' + repr(src - param.num_registers)
 
-def print_instructions(param, instructions, lineage, effective = False):
+def print_instructions(param, instructions, lineage, effective = False, file = None):
 
     if effective:
         instructions = intron_removal(param, instructions)
 
-    print('Printing {effective} instructions for individual {lineage}'.format(effective= 'effective' if effective else 'all', lineage = lineage))
+    print('Printing {effective} instructions for individual {lineage}'.format(effective= 'effective' if effective else 'all', lineage = lineage), file=file)
     for instruction in instructions:
         dest = 'R' + repr(instruction[0])
         src1 = get_printable_value(param, instruction[1])
         src2 = get_printable_value(param, instruction[2])
         op = instruction[3]
         if op == 4:
-            print(src1, param.operators_symbols[op], src2 + ':')
+            print(src1, param.operators_symbols[op], src2 + ':', file=file)
         elif op == 5 or op == 6:
-            print(dest, '=', param.operators_symbols[op] + '(' + src1 + ')')
+            print(dest, '=', param.operators_symbols[op] + '(' + src1 + ')', file=file)
         else:
-            print(dest, '=', src1, param.operators_symbols[op], src2)
+            print(dest, '=', src1, param.operators_symbols[op], src2, file=file)
 
-    print()
+    print(file=file)
 

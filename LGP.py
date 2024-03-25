@@ -32,19 +32,19 @@ class LGP(object):
         self.lineage = '0'
 
     # initialize an individual creating a random set of instructions using the initialization length
-    def initialize(self, input_data, target_data, name = '0'):
+    def initialize(self, input_data, target_data, weights=None, name = '0'):
         if self.param.effective_initialization:
             self.instructions, self.effective_registers = create_program(self.param, self.param.effective_initialization)
         else:
             self.instructions = create_program(self.param, self.param.effective_initialization)
-        self.evaluate(input_data, target_data)
+        self.evaluate(input_data, target_data, weights=weights, effective=self.param.effective_initialization)
         self.lineage = repr(name)
 
     # sets fitness to the balanced accuracy, behavior to the error vector and predictions to the predictions on the
     # given data
     # input data should be a list of lists, target data should be a list of values (targets) (both should be np arrays)
-    def evaluate(self, input_data, target_data, effective=False):
-        evaluation = evaluate(self.param, self.register_obj, self.instructions, input_data, target_data, effective)
+    def evaluate(self, input_data, target_data, weights=None, effective=False):
+        evaluation = evaluate(self.param, self.register_obj, self.instructions, input_data, target_data, weights=weights, effective=effective)
         if effective:
             self.instructions = evaluation[3]
             self.effective_registers = evaluation[4]
@@ -94,8 +94,11 @@ class LGP(object):
     #     child2.evaluate(input_data, target_data, effective=self.param.effective_recombination)
     #     return child1, child2
 
-    def print_program(self, effective = False):
-        print_instructions(self.param, self.instructions, self.lineage, effective=effective)
+    def print_program(self, effective = False, file = None):
+        print_instructions(self.param, self.instructions, self.lineage, effective=effective, file = file)
+
+    def print_parameters(self, file = None):
+        self.param.print_attributes(file = file)
 
 # add set instruction function for make copy
 

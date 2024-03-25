@@ -1,5 +1,5 @@
 from .register import register
-from numpy.random import default_rng
+from json import dumps
 
 class Parameters:
 
@@ -69,3 +69,7 @@ class Parameters:
         self.effective_initialization = False
         self.effective_mutation = False
         self.effective_recombination = False
+
+    def print_attributes(self, file=None):
+        for k,v in vars(self).items():
+            print('{}: \t {}'.format(k,v), file=file)
