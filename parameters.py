@@ -1,6 +1,9 @@
 from .register import register
 from json import dumps
 
+from .evaluate import weighted_binary_cross_entropy
+from .recombination import one_point_crossover
+
 class Parameters:
 
     def __init__(self, num_features, rng, input_sep = True):
@@ -18,6 +21,8 @@ class Parameters:
 
         # list of constants (negative so that when storing them in instructions they can be differentiated from registers)
         self.constants = list(range(-1,-10, -1))
+
+        self.evaluation_function = weighted_binary_cross_entropy
 
         self.input_sep = input_sep
         # different parameters for if there are separate readable input registers (otherwise calc registers hold the input)
@@ -54,7 +59,7 @@ class Parameters:
         self.mac_mut_rate = 0.5
         self.mic_mut_rate = 0.5
 
-        self.recombination_type = "one_point_crossover"
+        self.recombination_type = one_point_crossover
 
         #maximum distance between crossover points
         self.max_dc = 10
@@ -66,6 +71,7 @@ class Parameters:
         self.rng = rng
 
         # for effective initialization of programs
+        # work in progress, not ready to be used yet
         self.effective_initialization = False
         self.effective_mutation = False
         self.effective_recombination = False

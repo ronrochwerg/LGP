@@ -1,7 +1,6 @@
 from .parameters import Parameters
-from .instruction import create_program, print_instructions
+from .instruction import create_program, print_instructions, get_complexity
 from .mutation import apply_mutation
-from .recombination import apply_recombination
 from .evaluate import evaluate, predict
 from .register import register
 from copy import copy
@@ -24,7 +23,6 @@ class LGP(object):
         self.instructions = []
         self.effective_registers = []
         self.fitness = -1
-        self.behavior = ""
         self.predictions = []
         self.register_obj = [register(i) for i in range(self.param.num_registers)]
 
@@ -49,11 +47,10 @@ class LGP(object):
             self.instructions = evaluation[3]
             self.effective_registers = evaluation[4]
         self.fitness = evaluation[0]
-        self.behavior = evaluation[1]
-        self.predictions = evaluation[2]
+        self.predictions = evaluation[1]
 
-    def predict(self, input_data, tanh=True):
-        return predict(self.param, self.register_obj, self.instructions, input_data, tanh)
+    def predict(self, input_data, sig=True):
+        return predict(self.param, self.register_obj, self.instructions, input_data, sig)
 
     # applies a mutation to the individual (directly to the individual)
     def mutate(self):
@@ -61,7 +58,7 @@ class LGP(object):
 
     # applies recombination to the individual and another individual (directly, should already be copies)
     def recombine(self, other):
-        child1, child2 = apply_recombination(self.param, self.instructions, other.instructions)
+        child1, child2 = self.param.recombination_type(self.param, self.instructions, other.instructions)
         self.set_instructions(child1)
         other.set_instructions(child2)
 
@@ -94,8 +91,12 @@ class LGP(object):
     #     child2.evaluate(input_data, target_data, effective=self.param.effective_recombination)
     #     return child1, child2
 
-    def print_program(self, effective = False, file = None):
-        print_instructions(self.param, self.instructions, self.lineage, effective=effective, file = file)
+    def print_program(self, effective = True, equation = False, file = None, print_latex = False):
+        print_instructions(self.param, self.instructions, self.lineage, effective = effective, equation = equation,
+                           file = file, print_latex = print_latex)
+
+    def complexity(self, reduced = True):
+        return get_complexity(self.param, self.instructions, reduced=reduced)
 
     def print_parameters(self, file = None):
         self.param.print_attributes(file = file)

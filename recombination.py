@@ -1,9 +1,5 @@
 #from random import randint
 
-def apply_recombination(param, instruction_1, instruction_2):
-    if param.recombination_type == "one_point_crossover":
-        return one_point_crossover(param, instruction_1, instruction_2)
-
 def one_point_crossover(param, instruction_1, instruction_2):
     len1 = len(instruction_1)
     len2 = len(instruction_2)

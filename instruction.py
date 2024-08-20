@@ -1,5 +1,6 @@
 #from random import choice, random, shuffle
-
+import re
+from sympy import simplify, init_printing, latex, parse_expr, count_ops
 # creating an instruction
 def create_instruction(param, dest_options = None):
     # for effective instruction creation can specify a set to be chosen from for the destination register
@@ -95,23 +96,63 @@ def get_printable_value(param, src):
     else:
         return 'INP' + repr(src - param.num_registers)
 
-def print_instructions(param, instructions, lineage, effective = False, file = None):
+def print_instructions(param, instructions, lineage, effective = True, equation = False, file = None, print_latex = False):
 
     if effective:
         instructions = intron_removal(param, instructions)
 
-    print('Printing {effective} instructions for individual {lineage}'.format(effective= 'effective' if effective else 'all', lineage = lineage), file=file)
-    for instruction in instructions:
-        dest = 'R' + repr(instruction[0])
-        src1 = get_printable_value(param, instruction[1])
-        src2 = get_printable_value(param, instruction[2])
-        op = instruction[3]
-        if op == 4:
-            print(src1, param.operators_symbols[op], src2 + ':', file=file)
-        elif op == 5 or op == 6:
-            print(dest, '=', param.operators_symbols[op] + '(' + src1 + ')', file=file)
-        else:
-            print(dest, '=', src1, param.operators_symbols[op], src2, file=file)
+    if equation:
+        program = 'R0'
+        for instruction in instructions[::-1]:
+            program = program.replace(get_printable_value(param, instruction[0]),
+                            '(' +get_printable_value(param, instruction[1]) + ' ' +
+                            param.operators_symbols[instruction[3]] + ' ' +
+                            get_printable_value(param, instruction[2]) + ')')
+        if param.input_sep:
+            # match any string with R and then any number of digits after and replace with a 1 since starting register
+            # value is a 1
+            program = re.sub(r"R\d+", '1', program)
+        #have to do the replacement for non input separation
+
+        expr = parse_expr(program)
+        expr = simplify(expr)
+        init_printing()
+        print(expr, file=file)
+        if print_latex:
+            print('$' + latex(expr) + '$', file=file)
+
+    else:
+        print('Printing {effective} instructions for individual {lineage}'.format(effective= 'effective' if effective else 'all', lineage = lineage), file=file)
+        for instruction in instructions:
+            dest = 'R' + repr(instruction[0])
+            src1 = get_printable_value(param, instruction[1])
+            src2 = get_printable_value(param, instruction[2])
+            op = instruction[3]
+            if op == 4:
+                print(src1, param.operators_symbols[op], src2 + ':', file=file)
+            elif op == 5 or op == 6:
+                print(dest, '=', param.operators_symbols[op] + '(' + src1 + ')', file=file)
+            else:
+                print(dest, '=', src1, param.operators_symbols[op], src2, file=file)
 
     print(file=file)
 
+def get_complexity(param, instructions, reduced=True):
+    instructions = intron_removal(param, instructions)
+
+    program = 'R0'
+    for instruction in instructions[::-1]:
+        program = program.replace(get_printable_value(param, instruction[0]),
+                                  '(' + get_printable_value(param, instruction[1]) + ' ' +
+                                  param.operators_symbols[instruction[3]] + ' ' +
+                                  get_printable_value(param, instruction[2]) + ')')
+    if param.input_sep:
+        # match any string with R and then any number of digits after and replace with a 1 since starting register
+        # value is a 1
+        program = re.sub(r"R\d+", '1', program)
+    # have to do the replacement for non input separation
+
+    expr = parse_expr(program)
+    if reduced:
+        expr = simplify(expr)
+    return count_ops(expr, visual=False)
