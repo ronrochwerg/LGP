@@ -1,7 +1,7 @@
 
 # LGP (Linear Genetic Programming)
 
-This repository contains an implementation of Linear Genetic Programming (LGP). The key components include a set of parameters that control the behavior of the genetic programming algorithm and a class that represents individual genetic programs. This README provides an overview of the primary variables in the `parameters.py` file and the main functions in the `LGP.py` file.
+This repository contains an implementation of Linear Genetic Programming (LGP)[[1]](#1). The key components include a set of parameters that control the behavior of the genetic programming algorithm and a class that represents individual genetic programs. This README provides an overview of the primary variables in the `parameters.py` file and the main functions in the `LGP.py` file.
 
 ## Table of Contents
 
@@ -10,7 +10,7 @@ This repository contains an implementation of Linear Genetic Programming (LGP). 
 - [Overview of Parameters](#overview-of-parameters)
 - [Overview of LGP Class Functions](#overview-of-lgp-class-functions)
 - [Contributing](#contributing)
-- [License](#license)
+<!--- [License](#license)-->
 
 ## Installation
 
@@ -76,3 +76,8 @@ Contributions are welcome! Please feel free to submit a Pull Request or open an 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
 -->
 
+
+## References
+
+<a id="1">[1]</a> 
+Brameier, Markus F., and Wolfgang Banzhaf. Basic concepts of linear genetic programming. Springer US, 2007.
