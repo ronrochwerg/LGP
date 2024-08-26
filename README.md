@@ -16,15 +16,15 @@ This repository contains an implementation of Linear Genetic Programming (LGP). 
 
 To use this repository, clone it to your local machine using:
 
-\`\`\`bash
+```bash
 git clone https://github.com/ronrochwerg/LGP.git
-\`\`\`
+```
 
 Make sure you have the required dependencies installed, which you can install via pip:
 
-\`\`\`bash
+```bash
 pip install -r requirements.txt
-\`\`\`
+```
 
 ## Usage
 
