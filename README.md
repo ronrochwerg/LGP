@@ -29,10 +29,7 @@ Note: we are currently in the process of adding this project to PyPI which will 
 
 ## Usage
 
-This repository is designed for implementing and experimenting with linear genetic programming algorithms. Below is a brief explanation of the key files and how to use them:
-
-1. **parameters.py**: Contains the `Parameters` class that defines the configuration and settings used in the genetic programming process.
-2. **LGP.py**: Contains the `LGP` class, which represents a single individual in the genetic programming process and provides methods to initialize, evaluate, mutate, and recombine individuals.
+TBD
 
 ## Overview of Parameters
 
