@@ -1,7 +1,7 @@
 
 # LGP (Linear Genetic Programming)
 
-This repository contains an implementation of Linear Genetic Programming (LGP)[[1]](#1). The key components include a set of parameters that control the behavior of the genetic programming algorithm and a class that represents individual genetic programs. This README provides an overview of the primary variables in the `parameters.py` file and the main functions in the `LGP.py` file.
+This repository contains an implementation of Linear Genetic Programming (LGP)[[1]](#1). The key components include a set of parameters that control the behaviour of the genetic programming algorithm and a class that represents individual genetic programs. This README provides an overview of the primary variables in the `parameters.py` file and the main functions in the `LGP.py` file.
 
 ## Table of Contents
 
@@ -28,8 +28,24 @@ pip install -r requirements.txt
 Note: we are currently in the process of adding this project to PyPI which will make installation easier.
 
 ## Usage
+```python
+import LGP
+from numpy.random import default_rng
+from sklearn import datasets
 
-TBD
+# load dataset
+iris = datasets.load_iris()
+n_var = iris.data.shape[1]
+
+# create a parameters object
+rng = default_rng()
+param = LGP.Parameters(n_var, rng)
+
+# create model and initialize
+model = LGP.LGP(param)
+model.initialize(iris.data, iris.target)
+```
+Note: For the evolution of models in an evolutionary algorithm, please see [Population Evolution](https://github.com/ronrochwerg/Population_Evolution.git) library.
 
 ## Overview of Parameters
 
